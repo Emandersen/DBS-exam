@@ -1,23 +1,23 @@
 \babel@toc {english}{}\relax 
-\contentsline {section}{\numberline {1}Functional Dependencies}{2}{section.1}%
-\contentsline {subsection}{\numberline {1.1}The "Boss and Follower" Logic}{2}{subsection.1.1}%
-\contentsline {subsection}{\numberline {1.2}Verification Results}{2}{subsection.1.2}%
-\contentsline {section}{\numberline {2}Finding Superkeys}{2}{section.2}%
-\contentsline {subsection}{\numberline {2.1}Step-by-Step Process}{2}{subsection.2.1}%
-\contentsline {section}{\numberline {3}Normal Form Audit}{3}{section.3}%
-\contentsline {subsection}{\numberline {3.1}BCNF Check}{3}{subsection.3.1}%
-\contentsline {subsection}{\numberline {3.2}3NF Check}{3}{subsection.3.2}%
-\contentsline {section}{\numberline {4}Lossless Join}{3}{section.4}%
-\contentsline {section}{\numberline {5}External Merge Sort: 2-Way Algorithm}{3}{section.5}%
-\contentsline {subsection}{\numberline {5.1}Problem Example}{3}{subsection.5.1}%
-\contentsline {subsection}{\numberline {5.2}Step-by-Step Breakdown}{3}{subsection.5.2}%
-\contentsline {subsection}{\numberline {5.3}Why the Other Options Are Wrong}{4}{subsection.5.3}%
-\contentsline {section}{\numberline {6}Multi-Way External Merge Sort}{4}{section.6}%
-\contentsline {subsection}{\numberline {6.1}Example: Using Relation $r_1$}{4}{subsection.6.1}%
-\contentsline {subsection}{\numberline {6.2}Quick Comparison}{5}{subsection.6.2}%
-\contentsline {section}{\numberline {7}Page-Oriented Nested-Loop Joins}{5}{section.7}%
-\contentsline {subsection}{\numberline {7.1}Task-by-Task Logic}{5}{subsection.7.1}%
-\contentsline {section}{\numberline {8}Selection Size Estimation}{5}{section.8}%
-\contentsline {subsection}{\numberline {8.1}How to Calculate the Selections}{6}{subsection.8.1}%
-\contentsline {subsection}{\numberline {8.2}Verifying Multiple Options}{6}{subsection.8.2}%
-\contentsline {subsection}{\numberline {8.3}Summary Table}{6}{subsection.8.3}%
+\contentsline {section}{\numberline {1}\color {sectioncolor}\color {sectioncolor}Functional Dependencies}{2}{section.1}%
+\contentsline {subsection}{\numberline {1.1}\color {subsectioncolor}The "Boss and Follower" Logic}{2}{subsection.1.1}%
+\contentsline {subsection}{\numberline {1.2}\color {subsectioncolor}Verification Results}{2}{subsection.1.2}%
+\contentsline {section}{\numberline {2}\color {sectioncolor}Finding Superkeys}{2}{section.2}%
+\contentsline {subsection}{\numberline {2.1}\color {subsectioncolor}Step-by-Step Process}{2}{subsection.2.1}%
+\contentsline {section}{\numberline {3}\color {sectioncolor}Normal Form Audit}{3}{section.3}%
+\contentsline {subsection}{\numberline {3.1}\color {subsectioncolor}BCNF Check}{3}{subsection.3.1}%
+\contentsline {subsection}{\numberline {3.2}\color {subsectioncolor}3NF Check}{3}{subsection.3.2}%
+\contentsline {section}{\numberline {4}\color {sectioncolor}Lossless Join}{3}{section.4}%
+\contentsline {section}{\numberline {5}\color {sectioncolor}External Merge Sort: 2-Way Algorithm}{3}{section.5}%
+\contentsline {subsection}{\numberline {5.1}\color {subsectioncolor}Problem Example}{3}{subsection.5.1}%
+\contentsline {subsection}{\numberline {5.2}\color {subsectioncolor}Step-by-Step Breakdown}{3}{subsection.5.2}%
+\contentsline {subsection}{\numberline {5.3}\color {subsectioncolor}Why the Other Options Are Wrong}{4}{subsection.5.3}%
+\contentsline {section}{\numberline {6}\color {sectioncolor}Multi-Way External Merge Sort}{4}{section.6}%
+\contentsline {subsection}{\numberline {6.1}\color {subsectioncolor}Example: Using Relation $r_1$}{4}{subsection.6.1}%
+\contentsline {subsection}{\numberline {6.2}\color {subsectioncolor}Quick Comparison}{5}{subsection.6.2}%
+\contentsline {section}{\numberline {7}\color {sectioncolor}Page-Oriented Nested-Loop Joins}{5}{section.7}%
+\contentsline {subsection}{\numberline {7.1}\color {subsectioncolor}Task-by-Task Logic}{5}{subsection.7.1}%
+\contentsline {section}{\numberline {8}\color {sectioncolor}Selection Size Estimation}{5}{section.8}%
+\contentsline {subsection}{\numberline {8.1}\color {subsectioncolor}How to Calculate the Selections}{6}{subsection.8.1}%
+\contentsline {subsection}{\numberline {8.2}\color {subsectioncolor}Verifying Multiple Options}{6}{subsection.8.2}%
+\contentsline {subsection}{\numberline {8.3}\color {subsectioncolor}Summary Table}{6}{subsection.8.3}%

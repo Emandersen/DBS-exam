@@ -9,6 +9,9 @@
 \usepackage{enumitem}
 \usepackage{graphicx}
 \usepackage{booktabs}
+\usepackage{xcolor}
+\usepackage{tcolorbox}
+\tcbuselibrary{skins,breakable}
 
 % Page setup
 \geometry{margin=2.5cm}
@@ -19,8 +22,15 @@
     citecolor=blue
 }
 
+% Define custom colors
+\definecolor{sectioncolor}{RGB}{0,102,204}
+\definecolor{subsectioncolor}{RGB}{0,153,153}
+\definecolor{examplebox}{RGB}{230,240,255}
+\definecolor{formulabox}{RGB}{255,248,220}
+\definecolor{importantbox}{RGB}{255,230,230}
+
 % Title information
-\title{DBS Exam Notes}
+\title{\color{sectioncolor}\textbf{DBS Exam Notes}}
 \author{}
 \date{\today}
 
@@ -31,9 +41,9 @@
 \tableofcontents
 \newpage
 
-\section{Functional Dependencies}
+\section{\color{sectioncolor}\color{sectioncolor}Functional Dependencies}
 
-\subsection{The "Boss and Follower" Logic}
+\subsection{\color{subsectioncolor}The "Boss and Follower" Logic}
 A functional dependency $\alpha \to \beta$ is a rule stating that if two rows have the same value for the "Boss" ($\alpha$), they \textbf{must} have the same value for the "Follower" ($\beta$).
 
 \subsubsection*{Case Study: Slide 16 Instance}
@@ -50,10 +60,10 @@ a3 & b1 & c3 & d3 \\ \bottomrule
 \end{tabular}
 \end{center}
 
-\subsection{Verification Results}
+\subsection{\color{subsectioncolor}Verification Results}
 
 \begin{itemize}
-    \item \textbf{$A \to B$ (Holds):}
+    \item \textbf{\color{blue}$A \to B$ (Holds):}
     \begin{enumerate}
         \item \textbf{Step-by-Step Check:} Identify the Boss ($A$) and Follower ($B$).
         \item \textbf{Find Duplicates:} Look for rows where the Boss ($A$) has the same value.
@@ -62,7 +72,7 @@ a3 & b1 & c3 & d3 \\ \bottomrule
         \item \textbf{Verdict:} In both rows, the "Follower" in column $B$ is \textbf{b2}. Since the followers are identical for the duplicate boss, the dependency holds.
     \end{enumerate}
 
-    \item \textbf{$A \to C$ (Holds):}
+    \item \textbf{\color{blue}$A \to C$ (Holds):}
     \begin{itemize}
         \item For the duplicate boss \textbf{a2}, both rows have the identical follower \textbf{c2} in column $C$.
     \end{itemize}
@@ -74,9 +84,9 @@ a3 & b1 & c3 & d3 \\ \bottomrule
     \end{itemize}
 \end{itemize}
 
-\section{Finding Superkeys}
+\section{\color{sectioncolor}Finding Superkeys}
 
-\subsection{Step-by-Step Process}
+\subsection{\color{subsectioncolor}Step-by-Step Process}
 \begin{enumerate}
     \item Start with a candidate attribute (e.g., $B$)
     \item Check if $B$ is a "Boss" for any functional dependency rules
@@ -86,32 +96,32 @@ a3 & b1 & c3 & d3 \\ \bottomrule
     \item If you reach all attributes $\{A, B, C, D, E, F\}$, it is a superkey
 \end{enumerate}
 
-\section{Normal Form Audit}
+\section{\color{sectioncolor}Normal Form Audit}
 
-\subsection{BCNF Check}
+\subsection{\color{subsectioncolor}BCNF Check}
 \begin{itemize}
     \item Look at every functional dependency
     \item Is the "Boss" (left side) a superkey?
     \item If even one is not, it is \textbf{NOT in BCNF}
 \end{itemize}
 
-\subsection{3NF Check}
+\subsection{\color{subsectioncolor}3NF Check}
 \begin{itemize}
     \item If BCNF fails, check the "Follower" (right side)
     \item Is it a prime attribute (part of any candidate key)?
     \item If yes, it is \textbf{3NF}
 \end{itemize}
 
-\section{Lossless Join}
+\section{\color{sectioncolor}Lossless Join}
 
 A split into $R_1$ and $R_2$ is \textbf{lossless} if the attributes they share are a superkey for at least one of the two resulting tables.
 
-\section{External Merge Sort: 2-Way Algorithm}
+\section{\color{sectioncolor}External Merge Sort: 2-Way Algorithm}
 
-\subsection{Problem Example}
+\subsection{\color{subsectioncolor}Problem Example}
 The answer to Question 6.1 is $\lceil \log_2 2{,}000 \rceil$ because the algorithm must first convert the raw data into manageable pages and then iteratively merge those pages until they are sorted.
 
-\subsection{Step-by-Step Breakdown}
+\subsection{\color{subsectioncolor}Step-by-Step Breakdown}
 
 \subsubsection*{Step 1: Calculate the Number of Pages ($B$)}
 The algorithm operates on pages (blocks), not individual records.
@@ -145,17 +155,17 @@ To find out how many times you must halve the number of runs to reach 1, you use
 
 Since Phase 1 produced 2,000 runs, Phase 2 requires $\lceil \log_2 2{,}000 \rceil$ passes.
 
-\subsection{Why the Other Options Are Wrong}
+\subsection{\color{subsectioncolor}Why the Other Options Are Wrong}
 \begin{itemize}
     \item \textbf{(a) $\lceil \log_2 100{,}000 \rceil$:} This uses the number of tuples, but the database sorts pages.
     \item \textbf{(c) \& (d):} These use a base of 299 ($M-1$), which is the formula for a Multi-Way Merge Sort using all 300 buffer pages, but the question explicitly asked for the 2-Way algorithm.
 \end{itemize}
 
-\section{Multi-Way External Merge Sort}
+\section{\color{sectioncolor}Multi-Way External Merge Sort}
 
 For Multi-Way External Merge Sort, the logic shifts from merging only two runs at a time to using almost all available buffer pages to merge as many runs as possible in a single pass.
 
-\subsection{Example: Using Relation $r_1$}
+\subsection{\color{subsectioncolor}Example: Using Relation $r_1$}
 Using the same relation $r_1$ from Question 6.1 (with 2,000 pages and 300 buffer pages) as an example:
 
 \subsubsection*{1. Calculate Initial Runs (Phase 1 / Pass 0)}
@@ -183,7 +193,7 @@ $$\lceil \log_{M-1} (B/M) \rceil$$
     \item \textbf{Total I/O Cost:} $2 \times B \times (1 + \text{number of passes in Phase 2})$. For this specific case: $2 \times 2{,}000 \times (1 + 1) = 8{,}000$ I/Os.
 \end{itemize}
 
-\subsection{Quick Comparison}
+\subsection{\color{subsectioncolor}Quick Comparison}
 
 \begin{center}
 \begin{tabular}{@{}lll@{}}
@@ -195,9 +205,9 @@ Passes Formula & $\lceil \log_2 B \rceil$ & $1 + \lceil \log_{M-1} (B/M) \rceil$
 \end{tabular}
 \end{center}
 
-\section{Page-Oriented Nested-Loop Joins}
+\section{\color{sectioncolor}Page-Oriented Nested-Loop Joins}
 
-\subsection{Task-by-Task Logic}
+\subsection{\color{subsectioncolor}Task-by-Task Logic}
 Based on the formula for page-oriented nested-loop joins, follow these steps:
 
 \subsubsection*{Identify the Page Counts ($B$)}
@@ -216,10 +226,10 @@ Based on the formula for page-oriented nested-loop joins, follow these steps:
 \begin{itemize}
     \item In a page-oriented nested-loop join, the outer relation is read exactly once.
     \item For every page in the outer relation, the entire inner relation must be scanned once.
-    \item \textbf{Formula:} $Cost = \text{Pages}_{outer} + (\text{Pages}_{outer} \times \text{Pages}_{inner})$
+    \item \textbf{\color{orange}Formula:} $Cost = \text{Pages}_{outer} + (\text{Pages}_{outer} \times \text{Pages}_{inner})$
 \end{itemize}
 
-\section{Selection Size Estimation}
+\section{\color{sectioncolor}Selection Size Estimation}
 
 When estimating the result size of selection queries, we need to understand several key parameters:
 
@@ -229,13 +239,13 @@ When estimating the result size of selection queries, we need to understand seve
     \item \textbf{$[\min, \max]$:} The range of possible values for an attribute. For example, attribute $B$ ranges from $20$ to $60$.
 \end{itemize}
 
-\subsection{How to Calculate the Selections}
+\subsection{\color{subsectioncolor}How to Calculate the Selections}
 
 \subsubsection*{1. Equality Selection ($\sigma_{A=v}(r)$)}
 
 \textbf{Logic:} If values are uniformly distributed, every distinct value is expected to appear the same number of times.
 
-\textbf{Formula:} $\text{Estimated Size} = \frac{n_r}{V(A, r)}$
+\textbf{\color{orange}Formula:} $\text{Estimated Size} = \frac{n_r}{V(A, r)}$
 
 \textbf{Example:} $\sigma_{A=50}(r)$
 \begin{itemize}
@@ -247,14 +257,14 @@ When estimating the result size of selection queries, we need to understand seve
 
 \textbf{Logic:} You calculate the "fraction" of the range that is covered by the query and multiply it by the total number of tuples.
 
-\textbf{Formula:} $\text{Estimated Size} = n_r \times \frac{v - \min(A)}{\max(A) - \min(A)}$
+\textbf{\color{orange}Formula:} $\text{Estimated Size} = n_r \times \frac{v - \min(A)}{\max(A) - \min(A)}$
 
 \textbf{Example:} $\sigma_{A < 50}(r)$ where range for $A$ is $[0, 100]$
 \begin{itemize}
     \item Calculation: $4{,}000 \times \frac{50 - 0}{100 - 0} = 4{,}000 \times 0.5 = 2{,}000$
 \end{itemize}
 
-\subsection{Verifying Multiple Options}
+\subsection{\color{subsectioncolor}Verifying Multiple Options}
 
 \textbf{Option (a):} $\sigma_{C=150}(r)$
 \begin{itemize}
@@ -268,7 +278,7 @@ When estimating the result size of selection queries, we need to understand seve
     \item Verdict: If a statement says the estimation is 1,000, it is True.
 \end{itemize}
 
-\subsection{Summary Table}
+\subsection{\color{subsectioncolor}Summary Table}
 
 \begin{center}
 \begin{tabular}{@{}ll@{}}
@@ -281,3 +291,5 @@ Range ($A > v$) & $n_r \times \frac{\max - v}{\max - \min}$ \\ \bottomrule
 \end{center}
 
 \end{document}
+
+
