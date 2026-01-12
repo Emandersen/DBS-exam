@@ -11,13 +11,13 @@
 \contentsline {section}{\numberline {5}\color {sectioncolor}External Merge Sort: 2-Way Algorithm}{6}{section.5}%
 \contentsline {subsection}{\numberline {5.1}\color {subsectioncolor}Problem Example}{6}{subsection.5.1}%
 \contentsline {subsection}{\numberline {5.2}\color {subsectioncolor}Step-by-Step Breakdown}{6}{subsection.5.2}%
-\contentsline {subsection}{\numberline {5.3}\color {subsectioncolor}Why the Other Options Are Wrong}{6}{subsection.5.3}%
+\contentsline {subsection}{\numberline {5.3}\color {subsectioncolor}Why the Other Options Are Wrong}{7}{subsection.5.3}%
 \contentsline {section}{\numberline {6}\color {sectioncolor}Multi-Way External Merge Sort}{7}{section.6}%
 \contentsline {subsection}{\numberline {6.1}\color {subsectioncolor}Example: Using Relation $r_1$}{7}{subsection.6.1}%
-\contentsline {subsection}{\numberline {6.2}\color {subsectioncolor}Quick Comparison}{7}{subsection.6.2}%
-\contentsline {section}{\numberline {7}\color {sectioncolor}Page-Oriented Nested-Loop Joins}{8}{section.7}%
-\contentsline {subsection}{\numberline {7.1}\color {subsectioncolor}Task-by-Task Logic}{8}{subsection.7.1}%
-\contentsline {section}{\numberline {8}\color {sectioncolor}Selection Size Estimation}{9}{section.8}%
-\contentsline {subsection}{\numberline {8.1}\color {subsectioncolor}How to Calculate the Selections}{9}{subsection.8.1}%
-\contentsline {subsection}{\numberline {8.2}\color {subsectioncolor}Verifying Multiple Options}{10}{subsection.8.2}%
-\contentsline {subsection}{\numberline {8.3}\color {subsectioncolor}Summary Table}{10}{subsection.8.3}%
+\contentsline {subsection}{\numberline {6.2}\color {subsectioncolor}Quick Comparison}{8}{subsection.6.2}%
+\contentsline {section}{\numberline {7}\color {sectioncolor}Page-Oriented Nested-Loop Joins}{9}{section.7}%
+\contentsline {subsection}{\numberline {7.1}\color {subsectioncolor}Task-by-Task Logic}{9}{subsection.7.1}%
+\contentsline {section}{\numberline {8}\color {sectioncolor}Selection Size Estimation}{10}{section.8}%
+\contentsline {subsection}{\numberline {8.1}\color {subsectioncolor}How to Calculate the Selections}{10}{subsection.8.1}%
+\contentsline {subsection}{\numberline {8.2}\color {subsectioncolor}Verifying Multiple Options}{11}{subsection.8.2}%
+\contentsline {subsection}{\numberline {8.3}\color {subsectioncolor}Summary Table}{11}{subsection.8.3}%

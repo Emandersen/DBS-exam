@@ -65,6 +65,7 @@ a3 & b1 & c3 & d3 \\ \bottomrule
 
 \subsection{\color{subsectioncolor}Verification Results}
 
+\begin{tcolorbox}[colback=examplebox,colframe=blue,title=\textbf{Step-by-Step Verification}]
 \begin{itemize}
     \item \textbf{\color{blue}$A \to B$ (Holds):}
     \begin{enumerate}
@@ -80,12 +81,13 @@ a3 & b1 & c3 & d3 \\ \bottomrule
         \item For the duplicate boss \textbf{a2}, both rows have the identical follower \textbf{c2} in column $C$.
     \end{itemize}
 
-    \item \textbf{$A \to D$ (Fails):}
+    \item \textbf{\color{red}$A \to D$ (Fails):}
     \begin{itemize}
         \item For the duplicate boss \textbf{a2}, the followers in column $D$ are \textbf{d2} and \textbf{d3}.
         \item Because the followers are different for the same boss, the dependency is broken.
     \end{itemize}
 \end{itemize}
+\end{tcolorbox}
 
 \newpage
 \section{\color{sectioncolor}Finding Superkeys}
@@ -144,6 +146,7 @@ The answer to Question 6.1 is $\lceil \log_2 2{,}000 \rceil$ because the algorit
 
 \subsection{\color{subsectioncolor}Step-by-Step Breakdown}
 
+\begin{tcolorbox}[colback=examplebox,colframe=blue,title=\textbf{How to Calculate Pages and Phases}]
 \subsubsection*{Step 1: Calculate the Number of Pages ($B$)}
 The algorithm operates on pages (blocks), not individual records.
 \begin{itemize}
@@ -168,6 +171,7 @@ In a 2-Way merge, the computer uses 3 buffer pages: two for input (to read two r
     \item Pass 2: 1,000 runs are merged into 500 runs
     \item \textbf{Goal:} This continues until only 1 single sorted run remains
 \end{itemize}
+\end{tcolorbox}
 
 \subsubsection*{Step 4: The Mathematical Formula}
 To find out how many times you must halve the number of runs to reach 1, you use a logarithm with base 2.
@@ -177,16 +181,21 @@ To find out how many times you must halve the number of runs to reach 1, you use
 Since Phase 1 produced 2,000 runs, Phase 2 requires $\lceil \log_2 2{,}000 \rceil$ passes.
 
 \subsection{\color{subsectioncolor}Why the Other Options Are Wrong}
+
+\begin{tcolorbox}[colback=importantbox,colframe=red,title=\textbf{Common Mistakes}]
 \begin{itemize}
     \item \textbf{(a) $\lceil \log_2 100{,}000 \rceil$:} This uses the number of tuples, but the database sorts pages.
     \item \textbf{(c) \& (d):} These use a base of 299 ($M-1$), which is the formula for a Multi-Way Merge Sort using all 300 buffer pages, but the question explicitly asked for the 2-Way algorithm.
 \end{itemize}
+\end{tcolorbox}
 
 \section{\color{sectioncolor}Multi-Way External Merge Sort}
 
 For Multi-Way External Merge Sort, the logic shifts from merging only two runs at a time to using almost all available buffer pages to merge as many runs as possible in a single pass.
 
 \subsection{\color{subsectioncolor}Example: Using Relation $r_1$}
+
+\begin{tcolorbox}[colback=examplebox,colframe=blue,title=\textbf{Worked Example}]
 Using the same relation $r_1$ from Question 6.1 (with 2,000 pages and 300 buffer pages) as an example:
 
 \subsubsection*{1. Calculate Initial Runs (Phase 1 / Pass 0)}
@@ -202,6 +211,7 @@ In a Multi-Way merge, you use $M - 1$ buffer pages as input buffers (to read fro
 \begin{itemize}
     \item \textbf{Fan-in ($M - 1$):} $300 - 1 = \mathbf{299}$. This means you can merge up to 299 runs into 1 larger run in a single pass.
 \end{itemize}
+\end{tcolorbox}
 
 \subsubsection*{3. The Mathematical Formula}
 To find the number of passes required in Phase 2 to reach a single sorted file, use the formula:
@@ -211,11 +221,14 @@ $$\lceil \log_{M-1} (B/M) \rceil$$
 \end{tcolorbox}
 
 \subsubsection*{4. Applying it to the Example}
+
+\begin{tcolorbox}[colback=examplebox,colframe=blue,title=\textbf{Calculation}]
 \begin{itemize}
     \item \textbf{Phase 1 Cost:} $2 \times B = 4{,}000$ I/Os (reading and writing all pages once)
     \item \textbf{Phase 2 Passes:} $\lceil \log_{299} (7) \rceil$. Since 7 is much smaller than 299, it only takes 1 pass to merge all runs into the final sorted file.
     \item \textbf{Total I/O Cost:} $2 \times B \times (1 + \text{number of passes in Phase 2})$. For this specific case: $2 \times 2{,}000 \times (1 + 1) = 8{,}000$ I/Os.
 \end{itemize}
+\end{tcolorbox}
 
 \subsection{\color{subsectioncolor}Quick Comparison}
 
