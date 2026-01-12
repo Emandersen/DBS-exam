@@ -219,4 +219,65 @@ Based on the formula for page-oriented nested-loop joins, follow these steps:
     \item \textbf{Formula:} $Cost = \text{Pages}_{outer} + (\text{Pages}_{outer} \times \text{Pages}_{inner})$
 \end{itemize}
 
+\section{Selection Size Estimation}
+
+When estimating the result size of selection queries, we need to understand several key parameters:
+
+\begin{itemize}
+    \item \textbf{$n_r$:} The total number of tuples (rows) in the relation $r$. For example, $n_r = 4{,}000$.
+    \item \textbf{$V(A, r)$:} The number of distinct values for attribute $A$ in relation $r$. For instance, $V(A, r) = 100$, $V(B, r) = 200$, and $V(C, r) = 40$.
+    \item \textbf{$[\min, \max]$:} The range of possible values for an attribute. For example, attribute $B$ ranges from $20$ to $60$.
+\end{itemize}
+
+\subsection{How to Calculate the Selections}
+
+\subsubsection*{1. Equality Selection ($\sigma_{A=v}(r)$)}
+
+\textbf{Logic:} If values are uniformly distributed, every distinct value is expected to appear the same number of times.
+
+\textbf{Formula:} $\text{Estimated Size} = \frac{n_r}{V(A, r)}$
+
+\textbf{Example:} $\sigma_{A=50}(r)$
+\begin{itemize}
+    \item Calculation: $4{,}000 / 100 = 40$
+    \item Verdict: If a statement says the estimation is 100, it would be False.
+\end{itemize}
+
+\subsubsection*{2. Range Selection ($\sigma_{A < v}(r)$ or $\sigma_{A > v}(r)$)}
+
+\textbf{Logic:} You calculate the "fraction" of the range that is covered by the query and multiply it by the total number of tuples.
+
+\textbf{Formula:} $\text{Estimated Size} = n_r \times \frac{v - \min(A)}{\max(A) - \min(A)}$
+
+\textbf{Example:} $\sigma_{A < 50}(r)$ where range for $A$ is $[0, 100]$
+\begin{itemize}
+    \item Calculation: $4{,}000 \times \frac{50 - 0}{100 - 0} = 4{,}000 \times 0.5 = 2{,}000$
+\end{itemize}
+
+\subsection{Verifying Multiple Options}
+
+\textbf{Option (a):} $\sigma_{C=150}(r)$
+\begin{itemize}
+    \item Calculation: $n_r / V(C, r) = 4{,}000 / 40 = 100$
+    \item Verdict: If a statement says the estimation is 100, it is True.
+\end{itemize}
+
+\textbf{Option (e):} $\sigma_{B < 30}(r)$ where range for $B$ is $[20, 60]$
+\begin{itemize}
+    \item Calculation: $4{,}000 \times \frac{30 - 20}{60 - 20} = 4{,}000 \times \frac{10}{40} = 4{,}000 \times 0.25 = 1{,}000$
+    \item Verdict: If a statement says the estimation is 1,000, it is True.
+\end{itemize}
+
+\subsection{Summary Table}
+
+\begin{center}
+\begin{tabular}{@{}ll@{}}
+\toprule
+\textbf{Type of Query} & \textbf{Formula} \\ \midrule
+Equality ($A = v$) & $\frac{n_r}{V(A, r)}$ \\
+Range ($A < v$) & $n_r \times \frac{v - \min}{\max - \min}$ \\
+Range ($A > v$) & $n_r \times \frac{\max - v}{\max - \min}$ \\ \bottomrule
+\end{tabular}
+\end{center}
+
 \end{document}
