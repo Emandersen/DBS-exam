@@ -1,0 +1,154 @@
+\documentclass[11pt,a4paper]{article}
+
+% Packages
+\usepackage[utf8]{inputenc}
+\usepackage[english]{babel}
+\usepackage{amsmath,amssymb}
+\usepackage{geometry}
+\usepackage{hyperref}
+\usepackage{enumitem}
+\usepackage{graphicx}
+\usepackage{booktabs}
+
+% Page setup
+\geometry{margin=2.5cm}
+\hypersetup{
+    colorlinks=true,
+    linkcolor=blue,
+    urlcolor=blue,
+    citecolor=blue
+}
+
+% Title information
+\title{DBS Exam Notes}
+\author{}
+\date{\today}
+
+\begin{document}
+
+\maketitle
+
+\tableofcontents
+\newpage
+
+\section{Functional Dependencies}
+
+\subsection{The "Boss and Follower" Logic}
+A functional dependency $\alpha \to \beta$ is a rule stating that if two rows have the same value for the "Boss" ($\alpha$), they \textbf{must} have the same value for the "Follower" ($\beta$).
+
+\subsubsection*{Case Study: Slide 16 Instance}
+Based on the table instance provided on Slide 16 of Lecture 7, here is the verification for each functional dependency using the step-by-step process:
+
+\begin{center}
+\begin{tabular}{@{}cccc@{}}
+\toprule
+\textbf{A} & \textbf{B} & \textbf{C} & \textbf{D} \\ \midrule
+a1 & b1 & c1 & d1 \\
+a2 & b2 & c2 & d2 \\
+a2 & b2 & c2 & d3 \\
+a3 & b1 & c3 & d3 \\ \bottomrule
+\end{tabular}
+\end{center}
+
+\subsection{Verification Results}
+
+\begin{itemize}
+    \item \textbf{$A \to B$ (Holds):}
+    \begin{enumerate}
+        \item \textbf{Step-by-Step Check:} Identify the Boss ($A$) and Follower ($B$).
+        \item \textbf{Find Duplicates:} Look for rows where the Boss ($A$) has the same value.
+        \item \textbf{Check Followers:} For each duplicate Boss, verify that the Follower ($B$) values are identical.
+        \item \textbf{Verification:} The only duplicate "Boss" in column $A$ is \textbf{a2} (rows 2 and 3).
+        \item \textbf{Verdict:} In both rows, the "Follower" in column $B$ is \textbf{b2}. Since the followers are identical for the duplicate boss, the dependency holds.
+    \end{enumerate}
+
+    \item \textbf{$A \to C$ (Holds):}
+    \begin{itemize}
+        \item For the duplicate boss \textbf{a2}, both rows have the identical follower \textbf{c2} in column $C$.
+    \end{itemize}
+
+    \item \textbf{$A \to D$ (Fails):}
+    \begin{itemize}
+        \item For the duplicate boss \textbf{a2}, the followers in column $D$ are \textbf{d2} and \textbf{d3}.
+        \item Because the followers are different for the same boss, the dependency is broken.
+    \end{itemize}
+\end{itemize}
+
+\section{Finding Superkeys}
+
+\subsection{Step-by-Step Process}
+\begin{enumerate}
+    \item Start with a candidate attribute (e.g., $B$)
+    \item Check if $B$ is a "Boss" for any functional dependency rules
+    \item If $B \to A$, your set becomes $\{B, A\}$
+    \item Continue using your new set to unlock more attributes
+    \item If $\{A, B\}$ is now in your set and $AB \to C$, you add $C$
+    \item If you reach all attributes $\{A, B, C, D, E, F\}$, it is a superkey
+\end{enumerate}
+
+\section{Normal Form Audit}
+
+\subsection{BCNF Check}
+\begin{itemize}
+    \item Look at every functional dependency
+    \item Is the "Boss" (left side) a superkey?
+    \item If even one is not, it is \textbf{NOT in BCNF}
+\end{itemize}
+
+\subsection{3NF Check}
+\begin{itemize}
+    \item If BCNF fails, check the "Follower" (right side)
+    \item Is it a prime attribute (part of any candidate key)?
+    \item If yes, it is \textbf{3NF}
+\end{itemize}
+
+\section{Lossless Join}
+
+A split into $R_1$ and $R_2$ is \textbf{lossless} if the attributes they share are a superkey for at least one of the two resulting tables.
+
+\section{External Merge Sort: 2-Way Algorithm}
+
+\subsection{Problem Example}
+The answer to Question 6.1 is $\lceil \log_2 2{,}000 \rceil$ because the algorithm must first convert the raw data into manageable pages and then iteratively merge those pages until they are sorted.
+
+\subsection{Step-by-Step Breakdown}
+
+\subsubsection*{Step 1: Calculate the Number of Pages ($B$)}
+The algorithm operates on pages (blocks), not individual records.
+\begin{itemize}
+    \item Total Tuples ($n_{r1}$): 100,000
+    \item Tuples per Page: 50
+    \item Total Pages ($B$): $\frac{100{,}000}{50} = 2{,}000$ pages
+\end{itemize}
+
+\subsubsection*{Step 2: Understand the Sorting Phases}
+External sorting is divided into two distinct phases:
+\begin{itemize}
+    \item \textbf{Phase 1 (Pass 0):} The database reads each page into memory, sorts it, and writes it back to disk. This creates 2,000 sorted runs, each consisting of 1 page.
+    \item \textbf{Phase 2 (The Merge Phase):} This is what the question specifically asks for. In this phase, the algorithm takes the sorted runs and merges them into larger and larger runs.
+\end{itemize}
+
+\subsubsection*{Step 3: Apply the 2-Way Merge Logic}
+In a 2-Way merge, the computer uses 3 buffer pages: two for input (to read two runs) and one for output (to write the merged result).
+
+\textbf{The Power of 2:} Because it is a "2-Way" merge, it combines 2 runs into 1 larger run during every pass.
+\begin{itemize}
+    \item Pass 1: 2,000 runs are merged into 1,000 runs
+    \item Pass 2: 1,000 runs are merged into 500 runs
+    \item \textbf{Goal:} This continues until only 1 single sorted run remains
+\end{itemize}
+
+\subsubsection*{Step 4: The Mathematical Formula}
+To find out how many times you must halve the number of runs to reach 1, you use a logarithm with base 2.
+
+\textbf{Formula for Phase 2 Passes:} $\lceil \log_2 (\text{Initial Runs}) \rceil$
+
+Since Phase 1 produced 2,000 runs, Phase 2 requires $\lceil \log_2 2{,}000 \rceil$ passes.
+
+\subsection{Why the Other Options Are Wrong}
+\begin{itemize}
+    \item \textbf{(a) $\lceil \log_2 100{,}000 \rceil$:} This uses the number of tuples, but the database sorts pages.
+    \item \textbf{(c) \& (d):} These use a base of 299 ($M-1$), which is the formula for a Multi-Way Merge Sort using all 300 buffer pages, but the question explicitly asked for the 2-Way algorithm.
+\end{itemize}
+
+\end{document}

@@ -1,0 +1,171 @@
+\documentclass[11pt,a4paper]{article}
+
+% --- PACKAGES ---
+\usepackage[utf8]{inputenc}
+\usepackage[margin=1in]{geometry}
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{tabularx}
+\usepackage{enumitem}
+\usepackage{fancyhdr}
+\usepackage{graphicx} 
+\usepackage{tcolorbox}
+% --- HEADER AND FOOTER SETUP ---
+\setlength{\headheight}{30pt} 
+\setlength{\topmargin}{-15pt}
+
+\pagestyle{fancy}
+\fancyhf{}
+\lhead{Database Systems (CPH) -- Fall 2024 \\ Lecturer: Tiantian Liu}
+\rhead{AALBORG UNIVERSITY \\ DENMARK}
+\lfoot{Exam Date: Jan 7, 2025}
+\rfoot{\thepage}
+\renewcommand{\headrulewidth}{0.4pt}
+
+\begin{document}
+	
+	% --- FRONT PAGE: PREAMBLE ---
+	\section*{Preamble}
+	\begin{itemize}
+		\item This exam has seven questions and 13 pages.
+		\item The following table summarizes the questions and their weights:
+	\end{itemize}
+	
+	\begin{table}[h]
+		\centering
+		\begin{tabular}{|l|c|}
+			\hline
+			\textbf{Question} & \textbf{Points} \\ \hline
+			1. Relational Algebra & 10 \\ \hline
+			2. SQL & 20 \\ \hline
+			3. ER Modeling & 16 \\ \hline
+			4. Design Theory & 14 \\ \hline
+			5. Physical Design & 12 \\ \hline
+			6. Query Processing and Optimization & 14 \\ \hline
+			7. Transactions, Concurrency Control, and Recovery & 14 \\ \hline
+		\end{tabular}
+	\end{table}
+	\vfill
+	\centerline{Good luck!}
+	\newpage
+	
+\begin{tcolorbox}[colback=blue!5,colframe=blue!75!black,title=Relational Algebra Operators]
+	\small
+	\begin{description}
+		\item[Select ($\sigma_p$):] Selects tuples from a relation that satisfy a given predicate $p$ (e.g., $\sigma_{salary > 80000}$).
+		\item[Project ($\Pi_{A_1, A_2}$):] Returns the relation with only the specified attributes listed ($A_1, A_2, ...$). Duplicate rows are automatically removed.
+		\item[Union ($\cup$):] Combines two compatible relations (must have the same arity/number of attributes and compatible domains).
+		\item[Set-Intersection ($\cap$):] Finds tuples that are present in both input relations; relations must be compatible.
+		\item[Set-Difference ($-$):] Finds tuples that are in the first relation but not in the second; relations must be compatible.
+		\item[Cartesian Product ($\times$):] Associates every tuple of the first relation with every tuple of the second relation.
+		\item[Rename ($\rho_x$):] Provides a name ($x$) for the result of a relational-algebra expression so it can be referred to later.
+		\item[Theta Join ($\bowtie_\theta$):] A more efficient way to perform a selection on a Cartesian product ($r \bowtie_{\theta} s = \sigma_{\theta}(r \times s)$).
+		\item[Natural Join ($\bowtie$):] Performs a join based on common attributes between two relations; each common attribute appears only once in the result.
+		\item[Assignment ($\leftarrow$):] Used to assign parts of a complex expression to temporary relation variables for better readability.
+		\item[Grouping/Aggregation ($\gamma_{L;F}$):] Groups tuples by a list of attributes ($L$) and applies aggregate functions ($F$) like \textit{count, sum, min, max,} or \textit{avg} to each group.
+	\end{description}
+\end{tcolorbox}
+	
+	% --- SECTION 1: RELATIONAL ALGEBRA ---
+	\section{Relational Algebra (10 points)}
+	% SPACE FOR QUESTION 1 IMAGE
+	\vspace{0.5cm}
+\begin{figure}
+	\centering
+	\includegraphics[width=1\linewidth]{screenshot003}
+	\caption{}
+	\label{fig:screenshot003}
+\end{figure}
+
+	\vspace{0.5cm}
+	
+	\subsection*{1.1 (4 points)}
+	\textbf{Answer:} \\
+	Box 1: \framebox[3cm]{\rule{0pt}{15pt}$\prod$} \quad Box 2: \framebox[3cm]{\rule{0pt}{15pt} $\sigma$}
+	
+	\subsection*{1.2 (6 points)}
+	\textbf{Answer:} \\
+	Box 3: \framebox[2.5cm]{\rule{0pt}{15pt}$\prod$} \quad Box 4: \framebox[2.5cm]{\rule{0pt}{15pt}$\bowtie$} \quad Box 5: \framebox[2.5cm]{\rule{0pt}{15pt}$ \sigma$}
+	\newpage
+	
+	% --- SECTION 2: SQL ---
+	\section{SQL (20 points)}
+	% SPACE FOR QUESTION 2 IMAGE
+	\vspace{0.5cm}
+	\fbox{\begin{minipage}{0.95\textwidth} \centering \textit{Insert Question 2 Image Here} \end{minipage}}
+	\vspace{0.5cm}
+	
+	\subsection*{2.1 True/False}
+	2.1.1: \underline{\hspace{2cm}true} \quad 2.1.2: \underline{\hspace{2cm}False}
+	
+	\subsection*{2.2 Queries}
+	2.2.1: \underline{\hspace{2cm}a} \\
+	2.2.2: \underline{\hspace{2cm}c} \\
+	2.2.3 (Fill-in): \\
+	Box 1: \underline{\hspace{3cm}city = "Aarhus"} \quad Box 2: \underline{\hspace{3cm}"Seafood"} \\
+	Box 3: \underline{\hspace{3cm}} \quad Box 4: \underline{\hspace{3cm}} \\
+	2.2.4: \underline{\hspace{2cm}}
+	\newpage
+	
+	% --- SECTION 3: ER MODELING ---
+	\section{ER Modeling (16 points)}
+	% SPACE FOR QUESTION 3 IMAGE
+	\vspace{0.5cm}
+	\fbox{\begin{minipage}{0.95\textwidth} \centering \textit{Insert Question 3 Image Here} \end{minipage}}
+	\vspace{0.5cm}
+	
+	\subsection*{3.1 True/False}
+	3.1.1: \underline{\hspace{1cm}} \quad 3.1.2: \underline{\hspace{1cm}} \quad 3.1.3: \underline{\hspace{1cm}}
+	
+	\subsection*{3.2 \& 3.3 Multiple Choice}
+	3.2: \underline{\hspace{1cm}} \quad 3.3: \underline{\hspace{3cm}}
+	\newpage
+	
+	% --- SECTION 4: DESIGN THEORY ---
+	\section{Design Theory (14 points)}
+	% SPACE FOR QUESTION 4 IMAGE
+	\vspace{0.5cm}
+	\fbox{\begin{minipage}{0.95\textwidth} \centering \textit{Insert Question 4 Image Here} \end{minipage}}
+	\vspace{0.5cm}
+	
+	4.1 (T/F): \underline{\hspace{1cm}} \quad \underline{\hspace{1cm}} \\
+	4.2.1 (Superkeys): \underline{\hspace{4cm}} \\
+	4.2.2 (Normal Forms): \underline{\hspace{2cm}} \\
+	4.2.3 (Decomposition): \underline{\hspace{2cm}}
+	\newpage
+	
+	% --- SECTION 5: PHYSICAL DESIGN ---
+	\section{Physical Design (12 points)}
+	% SPACE FOR QUESTION 5 IMAGE
+	\vspace{0.5cm}
+	\fbox{\begin{minipage}{0.95\textwidth} \centering \textit{Insert Question 5 Image Here} \end{minipage}}
+	\vspace{0.5cm}
+	
+	5.1 (T/F): \underline{\hspace{1cm}} \quad \underline{\hspace{1cm}} \\
+	5.2.1 (Delete): \underline{\hspace{1cm}} \\
+	5.2.2 (Insert): \underline{\hspace{1cm}}
+	\newpage
+	
+	% --- SECTION 6: QUERY PROCESSING ---
+	\section{Query Processing and Optimization (14 points)}
+	% SPACE FOR QUESTION 6 IMAGE
+	\vspace{0.5cm}
+	\fbox{\begin{minipage}{0.95\textwidth} \centering \textit{Insert Question 6 Image Here} \end{minipage}}
+	\vspace{0.5cm}
+	
+	6.1: \underline{\hspace{1.5cm}} \quad 6.2: \underline{\hspace{1.5cm}} \quad 6.3: \underline{\hspace{1.5cm}} \quad 6.4: \underline{\hspace{1.5cm}}
+	\newpage
+	
+	% --- SECTION 7: TRANSACTIONS ---
+	\section{Transactions, Concurrency, and Recovery (14 points)}
+	% SPACE FOR QUESTION 7 IMAGE
+	\vspace{0.5cm}
+	\fbox{\begin{minipage}{0.95\textwidth} \centering \textit{Insert Question 7 Image Here} \end{minipage}}
+	\vspace{0.5cm}
+	
+	7.1 (T/F): \underline{\hspace{1cm}} \quad \underline{\hspace{1cm}} \\
+	7.2.1 (Precedence Graph): \underline{\hspace{1cm}} \\
+	7.2.2 (Serializability): \underline{\hspace{2cm}} \\
+	7.2.3 (Schedule Type): \underline{\hspace{2cm}}
+	
+\end{document}

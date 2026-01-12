@@ -1,0 +1,881 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DB Exam File Catalog</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            padding: 20px;
+            min-height: 100vh;
+        }
+        
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.2);
+            overflow: hidden;
+        }
+        
+        .header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 30px;
+            text-align: center;
+        }
+        
+        .header h1 {
+            font-size: 2.5em;
+            margin-bottom: 10px;
+        }
+        
+        .header p {
+            font-size: 1.1em;
+            opacity: 0.9;
+        }
+        
+        .search-box {
+            padding: 30px;
+            background: #f8f9fa;
+            border-bottom: 2px solid #e9ecef;
+        }
+        
+        .search-input {
+            width: 100%;
+            padding: 15px 20px;
+            font-size: 16px;
+            border: 2px solid #dee2e6;
+            border-radius: 10px;
+            transition: all 0.3s;
+        }
+        
+        .search-input:focus {
+            outline: none;
+            border-color: #667eea;
+            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+        }
+        
+        .stats {
+            padding: 20px 30px;
+            background: #e7f3ff;
+            display: flex;
+            justify-content: space-around;
+            flex-wrap: wrap;
+            gap: 15px;
+        }
+        
+        .stat-item {
+            text-align: center;
+        }
+        
+        .stat-number {
+            font-size: 2em;
+            font-weight: bold;
+            color: #667eea;
+        }
+        
+        .stat-label {
+            color: #6c757d;
+            font-size: 0.9em;
+            margin-top: 5px;
+        }
+        
+        .content {
+            padding: 30px;
+        }
+        
+        .category {
+            margin-bottom: 40px;
+        }
+        
+        .category-header {
+            display: flex;
+            align-items: center;
+            margin-bottom: 20px;
+            cursor: pointer;
+            user-select: none;
+        }
+        
+        .category-header:hover {
+            opacity: 0.8;
+        }
+        
+        .category-icon {
+            font-size: 2em;
+            margin-right: 15px;
+        }
+        
+        .category-title {
+            font-size: 1.8em;
+            color: #2c3e50;
+            font-weight: 600;
+        }
+        
+        .category-count {
+            margin-left: 10px;
+            background: #667eea;
+            color: white;
+            padding: 5px 15px;
+            border-radius: 20px;
+            font-size: 0.6em;
+        }
+        
+        .toggle-icon {
+            margin-left: auto;
+            font-size: 0.8em;
+            color: #6c757d;
+        }
+        
+        .files-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+            gap: 20px;
+        }
+        
+        .file-card {
+            background: white;
+            border: 2px solid #e9ecef;
+            border-radius: 10px;
+            padding: 20px;
+            transition: all 0.3s;
+            cursor: pointer;
+            position: relative;
+        }
+        
+        .file-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 5px 20px rgba(102, 126, 234, 0.3);
+            border-color: #667eea;
+        }
+        
+        .file-card::after {
+            content: '📄 Click to open';
+            position: absolute;
+            top: 10px;
+            right: 15px;
+            font-size: 0.75em;
+            color: #667eea;
+            opacity: 0;
+            transition: opacity 0.3s;
+        }
+        
+        .file-card:hover::after {
+            opacity: 1;
+        }
+        
+        .file-name {
+            font-size: 1.1em;
+            font-weight: 600;
+            color: #2c3e50;
+            margin-bottom: 10px;
+            word-break: break-word;
+        }
+        
+        .file-path {
+            font-size: 0.85em;
+            color: #6c757d;
+            margin-bottom: 15px;
+            font-family: monospace;
+            word-break: break-all;
+        }
+        
+        .keywords {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+        }
+        
+        .keyword {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 5px 12px;
+            border-radius: 15px;
+            font-size: 0.8em;
+            font-weight: 500;
+        }
+        
+        .hidden {
+            display: none;
+        }
+        
+        .collapsed {
+            display: none;
+        }
+        
+        .no-results {
+            text-align: center;
+            padding: 60px 20px;
+            color: #6c757d;
+            font-size: 1.2em;
+        }
+        
+        @media (max-width: 768px) {
+            .files-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .header h1 {
+                font-size: 1.8em;
+            }
+            
+            .stats {
+                flex-direction: column;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>📚 Database Exam File Catalog</h1>
+            <p>Complete overview of all course materials with searchable keywords</p>
+        </div>
+        
+        <div class="search-box">
+            <input type="text" class="search-input" id="searchInput" placeholder="🔍 Search by filename or keywords (e.g., SQL, ER, Transaction, Query, Index...)">
+        </div>
+        
+        <div class="stats">
+            <div class="stat-item">
+                <div class="stat-number" id="totalFiles">33</div>
+                <div class="stat-label">Total Files</div>
+            </div>
+            <div class="stat-item">
+                <div class="stat-number">11</div>
+                <div class="stat-label">Lectures</div>
+            </div>
+            <div class="stat-item">
+                <div class="stat-number">9</div>
+                <div class="stat-label">Exercises</div>
+            </div>
+            <div class="stat-item">
+                <div class="stat-number">9</div>
+                <div class="stat-label">Solutions</div>
+            </div>
+            <div class="stat-item">
+                <div class="stat-number">4</div>
+                <div class="stat-label">Other Materials</div>
+            </div>
+        </div>
+        
+        <div class="content">
+            <!-- Lectures Section -->
+            <div class="category" data-category="lectures">
+                <div class="category-header" onclick="toggleCategory('lectures')">
+                    <span class="category-icon">📖</span>
+                    <h2 class="category-title">Lecture Notes</h2>
+                    <span class="category-count">11 files</span>
+                    <span class="toggle-icon" id="toggle-lectures">▼</span>
+                </div>
+                <div class="files-grid" id="lectures-grid">
+                    <div class="file-card" data-keywords="introduction database basics concepts fundamentals overview DBMS system design model create administrative course structure MySQL PostgreSQL conceptual graph interpret acknowledgements relational physical motivation learning goals ECTS exam setup trains usage transaction tips teaching Korth textbook data management information">
+                        <div class="file-name">Lecture 1: Introduction</div>
+                        <div class="file-path">./lecture/Lecture_1_Introduction.pdf</div>
+                        <div class="keywords">
+                            <span class="keyword">Introduction</span>
+                            <span class="keyword">DBMS Concepts</span>
+                            <span class="keyword">Course Overview</span>
+                            <span class="keyword">Database Fundamentals</span>
+                            <span class="keyword">Relational Model</span>
+                            <span class="keyword">MySQL</span>
+                            <span class="keyword">PostgreSQL</span>
+                            <span class="keyword">Data Management</span>
+                            <span class="keyword">Learning Goals</span>
+                            <span class="keyword">Exam Structure</span>
+                        </div>
+                    </div>
+                    
+                    <div class="file-card" data-keywords="relational algebra selection projection join cartesian union difference operators sigma pi rename rho intersection tuple attribute domain schema instance superkey candidate primary foreign key table relation operation select project cross-product set-operations natural-join theta-join composition expressions example street address physics university HTML Felix Elodie">
+                        <div class="file-name">Lecture 2: Relational Algebra</div>
+                        <div class="file-path">./lecture/Lecture_2_Relational_Algebra.pdf</div>
+                        <div class="keywords">
+                            <span class="keyword">Relational Algebra</span>
+                            <span class="keyword">Selection (σ)</span>
+                            <span class="keyword">Projection (Π)</span>
+                            <span class="keyword">Join (⋈)</span>
+                            <span class="keyword">Cartesian Product</span>
+                            <span class="keyword">Set Operations</span>
+                            <span class="keyword">Rename (ρ)</span>
+                        </div>
+                    </div>
+                    
+                    <div class="file-card" data-keywords="SQL select from where query DML DDL basic statements create table insert delete update drop alter constraints primary foreign key integrity domain authorization definition modification keywords reserved syntax operations queries overview clause aggregate functions language exercise write UNIQUE referential varchar integer date char">
+                        <div class="file-name">Lecture 3: SQL</div>
+                        <div class="file-path">./lecture/Lecture_3_SQL.pdf</div>
+                        <div class="keywords">
+                            <span class="keyword">SQL Basics</span>
+                            <span class="keyword">SELECT Queries</span>
+                            <span class="keyword">DML Commands</span>
+                            <span class="keyword">DDL Commands</span>
+                            <span class="keyword">CREATE TABLE</span>
+                            <span class="keyword">INSERT/DELETE/UPDATE</span>
+                            <span class="keyword">Constraints</span>
+                            <span class="keyword">Data Types</span>
+                            <span class="keyword">Referential Integrity</span>
+                            <span class="keyword">Authorization</span>
+                        </div>
+                    </div>
+                    
+                    <div class="file-card" data-keywords="SQL advanced aggregate groupby having orderby nested subquery join natural outer left right full views create view avg min max sum count distinct null exists in some all case modification values boolean result music Mozart Einstein physics gold finance history Srinivasan correlated set-membership set-comparison with-clause">
+                        <div class="file-name">Lecture 4: SQL Part 2</div>
+                        <div class="file-path">./lecture/Lecture_4_SQL_2.pdf</div>
+                        <div class="keywords">
+                            <span class="keyword">Advanced SQL</span>
+                            <span class="keyword">Aggregate Functions</span>
+                            <span class="keyword">GROUP BY</span>
+                            <span class="keyword">HAVING Clause</span>
+                            <span class="keyword">Nested Subqueries</span>
+                            <span class="keyword">Correlated Subqueries</span>
+                            <span class="keyword">JOIN Types</span>
+                            <span class="keyword">Outer Joins</span>
+                            <span class="keyword">Views</span>
+                            <span class="keyword">NULL Handling</span>
+                            <span class="keyword">EXISTS/IN/SOME/ALL</span>
+                        </div>
+                    </div>
+                    
+                    <div class="file-card" data-keywords="ER entity relationship diagram modeling conceptual design attributes cardinality participation constraints requirements analysis process physical logical steps mapping primary key composite single-valued multi-valued derived types step data model theory table students video weak uniquely stored store specialization single simple science requirement collection objects participation degree">
+                        <div class="file-name">Lecture 5: ER Modeling</div>
+                        <div class="file-path">./lecture/Lecture_5_ER.pdf</div>
+                        <div class="keywords">
+                            <span class="keyword">ER Diagrams</span>
+                            <span class="keyword">Entity Sets</span>
+                            <span class="keyword">Relationship Sets</span>
+                            <span class="keyword">Conceptual Design</span>
+                            <span class="keyword">Attributes Types</span>
+                            <span class="keyword">Cardinality Ratios</span>
+                            <span class="keyword">Participation Constraints</span>
+                            <span class="keyword">Requirements Analysis</span>
+                            <span class="keyword">Composite Attributes</span>
+                            <span class="keyword">Multi-valued Attributes</span>
+                            <span class="keyword">Derived Attributes</span>
+                        </div>
+                    </div>
+                    
+                    <div class="file-card" data-keywords="ER advanced weak entity cardinality constraints ISA specialization generalization mapping relational tables 7-step process binary relationship regular strong identifying total partial M:N 1:N 1:1 complex recursive multi-valued composite derived example create option ISBN include FName exercise types solution improved extend agenda M1 M2 M3 M4 M5 M6 M7 disjoint overlapping covering">
+                        <div class="file-name">Lecture 6: ER Modeling Part 2</div>
+                        <div class="file-path">./lecture/Lecture_6_ER_2.pdf</div>
+                        <div class="keywords">
+                            <span class="keyword">Advanced ER</span>
+                            <span class="keyword">Weak Entity Types</span>
+                            <span class="keyword">Identifying Relationships</span>
+                            <span class="keyword">ISA Hierarchies</span>
+                            <span class="keyword">Specialization</span>
+                            <span class="keyword">Generalization</span>
+                            <span class="keyword">ER-to-Relational Mapping</span>
+                            <span class="keyword">7-Step Algorithm</span>
+                            <span class="keyword">M:N Relationships</span>
+                            <span class="keyword">1:N Relationships</span>
+                            <span class="keyword">1:1 Relationships</span>
+                            <span class="keyword">Recursive Relationships</span>
+                        </div>
+                    </div>
+                    
+                    <div class="file-card" data-keywords="design normalization functional dependencies BCNF 3NF decomposition redundancy anomalies closure candidate superkey lossless dependency-preserving first second third normal forms relational schema good bad design FD closure attribute finance painter Califieri history Srinivasan Katz Taylor Singh suppose data armstrong-axioms reflexivity augmentation transitivity trivial minimal-cover update insert delete anomaly 1NF 2NF">
+                        <div class="file-name">Lecture 7: Design Theory</div>
+                        <div class="file-path">./lecture/Lecture_7_Design.pdf</div>
+                        <div class="keywords">
+                            <span class="keyword">Normalization Theory</span>
+                            <span class="keyword">Functional Dependencies</span>
+                            <span class="keyword">BCNF</span>
+                            <span class="keyword">3NF</span>
+                            <span class="keyword">2NF</span>
+                            <span class="keyword">1NF</span>
+                            <span class="keyword">Lossless Decomposition</span>
+                            <span class="keyword">Dependency Preservation</span>
+                            <span class="keyword">Redundancy</span>
+                            <span class="keyword">Update Anomalies</span>
+                            <span class="keyword">Armstrong Axioms</span>
+                            <span class="keyword">Closure Computation</span>
+                        </div>
+                    </div>
+                    
+                    <div class="file-card" data-keywords="physical storage index btree b+tree file organization disk blocks pages hashing ordered hash magnetic hard sectors tracks memory volatile non-volatile hierarchy performance optimization access insertion deletion modification search range query records length variable fixed sequential tree ordered null media store multitable music Mike bytes suitable sparse dense primary secondary clustered heap scan">
+                        <div class="file-name">Lecture 8: Physical Design</div>
+                        <div class="file-path">./lecture/Lecture_8_Physical.pdf</div>
+                        <div class="keywords">
+                            <span class="keyword">Physical Storage</span>
+                            <span class="keyword">B+ Tree Index</span>
+                            <span class="keyword">Hashing</span>
+                            <span class="keyword">File Organization</span>
+                            <span class="keyword">Heap Files</span>
+                            <span class="keyword">Sequential Files</span>
+                            <span class="keyword">Ordered Index</span>
+                            <span class="keyword">Dense/Sparse Index</span>
+                            <span class="keyword">Primary/Secondary Index</span>
+                            <span class="keyword">Clustered Index</span>
+                            <span class="keyword">Storage Hierarchy</span>
+                            <span class="keyword">Disk Performance</span>
+                        </div>
+                    </div>
+                    
+                    <div class="file-card" data-keywords="query processing optimization join algorithms sort merge nested loop hash cost estimation evaluation parsing translation logical physical heuristic cartesian product projection selection predicate groupby having bulk external sorting nested-loop block-nested-loop index-nested-loop phase pass main input disk write read page output make given assume cost-based equivalence-rules push-down selection pipelining materialization operator-tree">
+                        <div class="file-name">Lecture 9: Query Processing</div>
+                        <div class="file-path">./lecture/Lecture_9_Query.pdf</div>
+                        <div class="keywords">
+                            <span class="keyword">Query Processing</span>
+                            <span class="keyword">Query Optimization</span>
+                            <span class="keyword">Join Algorithms</span>
+                            <span class="keyword">Nested-Loop Join</span>
+                            <span class="keyword">Block-Nested-Loop</span>
+                            <span class="keyword">Index-Nested-Loop</span>
+                            <span class="keyword">Sort-Merge Join</span>
+                            <span class="keyword">Hash Join</span>
+                            <span class="keyword">External Sorting</span>
+                            <span class="keyword">Cost Estimation</span>
+                            <span class="keyword">Heuristic Optimization</span>
+                            <span class="keyword">Equivalence Rules</span>
+                        </div>
+                    </div>
+                    
+                    <div class="file-card" data-keywords="transaction ACID atomicity consistency isolation durability concurrency control locking serialization schedule commit abort rollback begin deadlock conflict serializable two-phase 2PL shared exclusive read write multi-user properties failures schedule problems potential SAVEPOINT ROLLBACK concurrent VALUES unsuccessful step SELECT INTO INSERT FROM executions valid termination successful serial savepoints roll reduced recovery phantom conflict-serializability view-serializability lock-manager wait-for-graph">
+                        <div class="file-name">Lecture 10: Transactions</div>
+                        <div class="file-path">./lecture/Lecture_10_Transaction.pdf</div>
+                        <div class="keywords">
+                            <span class="keyword">Transactions</span>
+                            <span class="keyword">ACID Properties</span>
+                            <span class="keyword">Atomicity</span>
+                            <span class="keyword">Consistency</span>
+                            <span class="keyword">Isolation Levels</span>
+                            <span class="keyword">Durability</span>
+                            <span class="keyword">Concurrency Control</span>
+                            <span class="keyword">Two-Phase Locking</span>
+                            <span class="keyword">Shared/Exclusive Locks</span>
+                            <span class="keyword">Serializability</span>
+                            <span class="keyword">Deadlock Detection</span>
+                            <span class="keyword">Conflict Serializability</span>
+                        </div>
+                    </div>
+                    
+                    <div class="file-card" data-keywords="recovery logging checkpoint undo redo crash failure WAL write-ahead log buffer disk durability atomicity forward backward compensation transaction abort commit rollback physical logical steal no-steal force no-force ARIES phase stop repeat operations determine created analysis redo-phase undo-phase LSN dirty-page-table transaction-table log-record fuzzy-checkpoint">
+                        <div class="file-name">Lecture 11: Recovery</div>
+                        <div class="file-path">./lecture/Lecture_11_Recovery.pdf</div>
+                        <div class="keywords">
+                            <span class="keyword">Recovery</span>
+                            <span class="keyword">Logging</span>
+                            <span class="keyword">Write-Ahead Log</span>
+                            <span class="keyword">Checkpoints</span>
+                            <span class="keyword">UNDO</span>
+                            <span class="keyword">REDO</span>
+                            <span class="keyword">Crash Recovery</span>
+                            <span class="keyword">Buffer Management</span>
+                            <span class="keyword">Failure Types</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Exercises Section -->
+            <div class="category" data-category="exercises">
+                <div class="category-header" onclick="toggleCategory('exercises')">
+                    <span class="category-icon">✏️</span>
+                    <h2 class="category-title">Exercises</h2>
+                    <span class="category-count">9 files</span>
+                    <span class="toggle-icon" id="toggle-exercises">▼</span>
+                </div>
+                <div class="files-grid" id="exercises-grid">
+                    <div class="file-card" data-keywords="exercise practice problems assignment homework questions relational model algebra find relation consider teacher systems sheet review Miami lecture fall database works union tuple superkey select project primary page join hint give from foreign candidate operations compose expression">
+                        <div class="file-name">Exercise 2</div>
+                        <div class="file-path">./exercises/Exercise2.pdf</div>
+                        <div class="keywords">
+                            <span class="keyword">Exercise 2</span>
+                            <span class="keyword">Relational Algebra</span>
+                            <span class="keyword">Practice Problems</span>
+                            <span class="keyword">Operations</span>
+                            <span class="keyword">Keys</span>
+                        </div>
+                    </div>
+                    
+                    <div class="file-card" data-keywords="exercise practice problems assignment homework questions SQL queries find teacher systems sheet part lecture fall database tables review PostgreSQL Moodle using updates university translate test querying output manipulating list insert Helle create consider aggregate Aalborg SELECT FROM WHERE">
+                        <div class="file-name">Exercise 3</div>
+                        <div class="file-path">./exercises/Exercise3.pdf</div>
+                        <div class="keywords">
+                            <span class="keyword">Exercise 3</span>
+                            <span class="keyword">SQL Basics</span>
+                            <span class="keyword">Queries</span>
+                            <span class="keyword">PostgreSQL</span>
+                            <span class="keyword">Practice</span>
+                        </div>
+                    </div>
+                    
+                    <div class="file-card" data-keywords="exercise practice problems assignment homework questions SQL advanced teacher systems sheet review part list lecture fall database create Wednesday view university transactions test referential queries PostgreSQL null modification join Friday find constraints consider Aalborg aggregate subquery nested">
+                        <div class="file-name">Exercise 4</div>
+                        <div class="file-path">./exercises/Exercise4.pdf</div>
+                        <div class="keywords">
+                            <span class="keyword">Exercise 4</span>
+                            <span class="keyword">Advanced SQL</span>
+                            <span class="keyword">Views</span>
+                            <span class="keyword">Joins</span>
+                            <span class="keyword">Constraints</span>
+                        </div>
+                    </div>
+                    
+                    <div class="file-card" data-keywords="exercise practice problems assignment homework questions ER modeling entity relationship each include Chen cardinality weak teacher systems strong specialization single sheet sample review relationship primary participation part multi model lecture fall database construct composite attribute degree total partial ISA">
+                        <div class="file-name">Exercise 5</div>
+                        <div class="file-path">./exercises/Exercise5.pdf</div>
+                        <div class="keywords">
+                            <span class="keyword">Exercise 5</span>
+                            <span class="keyword">ER Modeling</span>
+                            <span class="keyword">Entity-Relationship</span>
+                            <span class="keyword">Diagrams</span>
+                            <span class="keyword">Cardinality</span>
+                        </div>
+                    </div>
+                    
+                    <div class="file-card" data-keywords="exercise practice problems assignment homework questions ER mapping relational each please teacher systems sheet review part only model lecture fall database consider attribute 7-step algorithm M1 M2 M3 M4 M5 M6 M7 weak-entity strong-entity binary-relationship">
+                        <div class="file-name">Exercise 6</div>
+                        <div class="file-path">./exercises/Exercise6.pdf</div>
+                        <div class="keywords">
+                            <span class="keyword">Exercise 6</span>
+                            <span class="keyword">ER-to-Relational</span>
+                            <span class="keyword">Mapping</span>
+                            <span class="keyword">7-Step Process</span>
+                            <span class="keyword">Practice</span>
+                        </div>
+                    </div>
+                    
+                    <div class="file-card" data-keywords="exercise practice problems assignment homework questions normalization design theory functional dependencies database teacher systems sheet relational please lecture fall list given figure decomposition BCNF Armstrong union trivial transitivity third suppose sets review relation reflexive lossless holds compute 3NF 2NF FD closure augmentation candidate-key minimal-cover">
+                        <div class="file-name">Exercise 7</div>
+                        <div class="file-path">./exercises/Exercise7.pdf</div>
+                        <div class="keywords">
+                            <span class="keyword">Exercise 7</span>
+                            <span class="keyword">Normalization</span>
+                            <span class="keyword">Functional Dependencies</span>
+                            <span class="keyword">BCNF/3NF</span>
+                            <span class="keyword">Decomposition</span>
+                        </div>
+                    </div>
+                    
+                    <div class="file-card" data-keywords="exercise practice problems assignment homework questions physical design indexing btree teacher systems sheet lecture fall database select insert volatile variable tree sparse sequential secondary search root review primary page multitable leaf internal heap hashing dense ordered insertion deletion range-query cost-analysis">
+                        <div class="file-name">Exercise 8</div>
+                        <div class="file-path">./exercises/Exercise8.pdf</div>
+                        <div class="keywords">
+                            <span class="keyword">Exercise 8</span>
+                            <span class="keyword">Physical Design</span>
+                            <span class="keyword">B+ Trees</span>
+                            <span class="keyword">Indexing</span>
+                            <span class="keyword">Practice</span>
+                        </div>
+                    </div>
+                    
+                    <div class="file-card" data-keywords="exercise practice problems assignment homework questions query processing optimization estimate assume sort simple page hash block teacher systems statistics size sheet runs review processing oriented nested loops lecture join histograms hint given fall external equivalence cost-estimation join-algorithms selection-push-down">
+                        <div class="file-name">Exercise 9</div>
+                        <div class="file-path">./exercises/Exercise9.pdf</div>
+                        <div class="keywords">
+                            <span class="keyword">Exercise 9</span>
+                            <span class="keyword">Query Processing</span>
+                            <span class="keyword">Optimization</span>
+                            <span class="keyword">Join Algorithms</span>
+                            <span class="keyword">Cost Estimation</span>
+                        </div>
+                    </div>
+                    
+                    <div class="file-card" data-keywords="exercise practice problems assignment homework questions transaction concurrency recovery transactions teacher systems sheet lecture fall database control consider conflict wait unlocking shared serial review precedence phase locking isolation exclusive durability deadlock consistency atomicity ACID serializable schedule 2PL lock-compatibility wait-for-graph">
+                        <div class="file-name">Exercise 10</div>
+                        <div class="file-path">./exercises/Exercise10.pdf</div>
+                        <div class="keywords">
+                            <span class="keyword">Exercise 10</span>
+                            <span class="keyword">Transactions</span>
+                            <span class="keyword">Concurrency Control</span>
+                            <span class="keyword">ACID</span>
+                            <span class="keyword">2PL</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Solutions Section -->
+            <div class="category" data-category="solutions">
+                <div class="category-header" onclick="toggleCategory('solutions')">
+                    <span class="category-icon">✅</span>
+                    <h2 class="category-title">Exercise Solutions</h2>
+                    <span class="category-count">9 files</span>
+                    <span class="toggle-icon" id="toggle-solutions">▼</span>
+                </div>
+                <div class="files-grid" id="solutions-grid">
+                    <div class="file-card" data-keywords="solution answer key correct explanation workout relational model algebra answers review Miami find BigBank relation exercise consider works teacher systems sheet lecture fall employee database company chapter candidate union tuple superkeys superkey select project primary page join operation compose expression detailed-solution step-by-step">
+                        <div class="file-name">Exercise 2 Solution</div>
+                        <div class="file-path">./exercises solutions/Exercise2_Solution.pdf</div>
+                        <div class="keywords">
+                            <span class="keyword">Solution 2</span>
+                            <span class="keyword">Relational Algebra</span>
+                            <span class="keyword">Answers</span>
+                            <span class="keyword">Explanations</span>
+                        </div>
+                    </div>
+                    
+                    <div class="file-card" data-keywords="solution answer key correct explanation workout SQL queries answer SELECT FROM WHERE find teacher systems sheet review part lecture fall exercise database COUNT tables PostgreSQL Moodle LIKE Helle GROUP DISTINCT VALUES using updates university translate test manipulating aggregate detailed-solution">
+                        <div class="file-name">Exercise 3 Solution</div>
+                        <div class="file-path">./exercises solutions/Exercise3_Solution.pdf</div>
+                        <div class="keywords">
+                            <span class="keyword">Solution 3</span>
+                            <span class="keyword">SQL Basics</span>
+                            <span class="keyword">Query Answers</span>
+                            <span class="keyword">Explanations</span>
+                        </div>
+                    </div>
+                    
+                    <div class="file-card" data-keywords="solution answer key correct explanation workout SQL advanced SELECT FROM answer WHERE teacher systems sheet review part lecture JOIN fall exercise database Wednesday list Friday CREATE view VIEW university transactions test TABLE SOME referential REFERENCES queries PostgreSQL null modification constraints detailed-solution subquery">
+                        <div class="file-name">Exercise 4 Solution</div>
+                        <div class="file-path">./exercises solutions/Exercise4_Solution.pdf</div>
+                        <div class="keywords">
+                            <span class="keyword">Solution 4</span>
+                            <span class="keyword">Advanced SQL</span>
+                            <span class="keyword">Views</span>
+                            <span class="keyword">Joins</span>
+                            <span class="keyword">Answers</span>
+                        </div>
+                    </div>
+                    
+                    <div class="file-card" data-keywords="solution answer key correct explanation workout ER modeling entity relationship each include teacher systems sheet review part model lecture fall exercise database construct Chen chapter alternatively cardinality weak strong specialization diagram detailed-solution">
+                        <div class="file-name">Exercise 5 Solution</div>
+                        <div class="file-path">./exercises solutions/Exercise5_Solution.pdf</div>
+                        <div class="keywords">
+                            <span class="keyword">Solution 5</span>
+                            <span class="keyword">ER Modeling</span>
+                            <span class="keyword">Diagram Answers</span>
+                            <span class="keyword">Explanations</span>
+                        </div>
+                    </div>
+                    
+                    <div class="file-card" data-keywords="solution answer key correct explanation workout ER mapping relational each please teacher systems sheet review part only model lecture fall exercise database consider attribute answer 7-step mapping-algorithm detailed-solution">
+                        <div class="file-name">Exercise 6 Solution</div>
+                        <div class="file-path">./exercises solutions/Exercise6_Solution.pdf</div>
+                        <div class="keywords">
+                            <span class="keyword">Solution 6</span>
+                            <span class="keyword">ER-to-Relational</span>
+                            <span class="keyword">Mapping Answers</span>
+                            <span class="keyword">Explanations</span>
+                        </div>
+                    </div>
+                    
+                    <div class="file-card" data-keywords="solution answer key correct explanation workout normalization design theory functional dependencies database exercise ABCDEFG teacher systems sheet relational please lecture fall Armstrong answer ABCDFG review list given figure decomposition CDGB CDAGB BCNF augmentation ACDG ABCDG union trivial transitivity third 3NF 2NF closure lossless detailed-solution">
+                        <div class="file-name">Exercise 7 Solution</div>
+                        <div class="file-path">./exercises solutions/Exercise7_Solution.pdf</div>
+                        <div class="keywords">
+                            <span class="keyword">Solution 7</span>
+                            <span class="keyword">Normalization</span>
+                            <span class="keyword">FD Answers</span>
+                            <span class="keyword">BCNF/3NF</span>
+                            <span class="keyword">Decomposition</span>
+                        </div>
+                    </div>
+                    
+                    <div class="file-card" data-keywords="solution answer key correct explanation workout physical design indexing btree teacher systems sheet lecture fall exercise database select insert answer root review insertion volatile variable tree sparse sequential secondary search primary page multitable leaf internal hashing detailed-solution">
+                        <div class="file-name">Exercise 8 Solution</div>
+                        <div class="file-path">./exercises solutions/Exercise8_Solution.pdf</div>
+                        <div class="keywords">
+                            <span class="keyword">Solution 8</span>
+                            <span class="keyword">Physical Design</span>
+                            <span class="keyword">B+ Tree Answers</span>
+                            <span class="keyword">Index Operations</span>
+                            <span class="keyword">Explanations</span>
+                        </div>
+                    </div>
+                    
+                    <div class="file-card" data-keywords="solution answer key correct explanation workout query processing optimization assume sort simple page hash estimate block teacher systems sheet review query processing optimization lecture fall exercise database answer statistics size runs otherwise oriented loops join histograms hint given cost-estimation detailed-solution">
+                        <div class="file-name">Exercise 9 Solution</div>
+                        <div class="file-path">./exercises solutions/Exercise9_Solution.pdf</div>
+                        <div class="keywords">
+                            <span class="keyword">Solution 9</span>
+                            <span class="keyword">Query Optimization</span>
+                            <span class="keyword">Join Answers</span>
+                            <span class="keyword">Cost Analysis</span>
+                            <span class="keyword">Explanations</span>
+                        </div>
+                    </div>
+                    
+                    <div class="file-card" data-keywords="solution answer key correct explanation workout transaction concurrency recovery lock unlock transactions teacher systems sheet lecture fall exercise database control review equivalent consider conflict answers wait unlocking shared serial precedence phase locking isolation execution exclusive durability deadlock consistency atomicity ACID 2PL serializability detailed-solution">
+                        <div class="file-name">Exercise 10 Solution</div>
+                        <div class="file-path">./exercises solutions/Exercise10_Solution.pdf</div>
+                        <div class="keywords">
+                            <span class="keyword">Solution 10</span>
+                            <span class="keyword">Transactions</span>
+                            <span class="keyword">Concurrency Answers</span>
+                            <span class="keyword">ACID</span>
+                            <span class="keyword">Serializability</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Other Materials Section -->
+            <div class="category" data-category="other">
+                <div class="category-header" onclick="toggleCategory('other')">
+                    <span class="category-icon">📋</span>
+                    <h2 class="category-title">Additional Materials</h2>
+                    <span class="category-count">4 files</span>
+                    <span class="toggle-icon" id="toggle-other">▼</span>
+                </div>
+                <div class="files-grid" id="other-grid">
+                    <div class="file-card" data-keywords="summary overview review exam preparation study guide topics relational algebra SQL ER modeling design theory normalization physical query transaction concurrency recovery ACID BCNF 3NF functional dependencies btree index join optimization tuple schema attribute key understand terms relationship entity requirements model design create primary page cardinality block binary weak tree transactions sort simple hash multi interpretall-topics comprehensive exam-format box-filling multiple-choice learning-goals operations constraints">
+                        <div class="file-name">Summary</div>
+                        <div class="file-path">./additional files/Summary.pdf</div>
+                        <div class="keywords">
+                            <span class="keyword">Complete Summary</span>
+                            <span class="keyword">Exam Preparation</span>
+                            <span class="keyword">All Topics</span>
+                            <span class="keyword">Study Guide</span>
+                            <span class="keyword">Key Terms</span>
+                            <span class="keyword">Learning Goals</span>
+                            <span class="keyword">Review Material</span>
+                            <span class="keyword">Comprehensive</span>
+                            <span class="keyword">Box Filling</span>
+                            <span class="keyword">Multiple Choice</span>
+                        </div>
+                    </div>
+                    
+                    <div class="file-card" data-keywords="postgres postgresql instruction tutorial database setup installation create query tool DDL execute table schema pgAdmin connect server click create tables right execute schemas query name instruction find copy step-by-step guide windows linux mac command-line GUI database-creation table-creation SQL-execution">
+                        <div class="file-name">PostgreSQL Instructions</div>
+                        <div class="file-path">./material/Instruction_Postgres.pdf</div>
+                        <div class="keywords">
+                            <span class="keyword">PostgreSQL</span>
+                            <span class="keyword">Installation Guide</span>
+                            <span class="keyword">pgAdmin Tutorial</span>
+                            <span class="keyword">Query Tool</span>
+                            <span class="keyword">Database Setup</span>
+                            <span class="keyword">DDL Execution</span>
+                            <span class="keyword">Table Creation</span>
+                            <span class="keyword">Step-by-Step</span>
+                        </div>
+                    </div>
+                    
+                    <div class="file-card" data-keywords="exam test F24 fall 2024 practice questions relational algebra SQL ER design modeling normalization BCNF 3NF functional dependencies btree physical query optimization transaction concurrency recovery lossless decomposition weak entity cardinality multiple choice box filling SELECT FROM choose true false which WHERE systems lecturer fall exam date database Copenhagen consider tree COUNT JOIN evaluate LIKE Italian GROUP answer seafood find deliveryman restaurant cuisine dorder past-exam practice-test sample-exam 7-questions 100-points">
+                        <div class="file-name">Exam Fall 2024</div>
+                        <div class="file-path">./pre-exam/Exam_F24.pdf</div>
+                        <div class="keywords">
+                            <span class="keyword">Fall 2024 Exam</span>
+                            <span class="keyword">Practice Test</span>
+                            <span class="keyword">Past Exam</span>
+                            <span class="keyword">All 7 Topics</span>
+                            <span class="keyword">Multiple Choice</span>
+                            <span class="keyword">Box Filling</span>
+                            <span class="keyword">Sample Questions</span>
+                            <span class="keyword">Copenhagen</span>
+                            <span class="keyword">100 Points</span>
+                            <span class="keyword">Full Exam</span>
+                        </div>
+                    </div>
+                    
+                    <div class="file-card" data-keywords="exam solution F24 fall 2024 answer key correct answers explanation relational algebra SQL ER design modeling normalization BCNF 3NF functional dependencies btree physical query optimization transaction concurrency recovery worked solutions detailed SELECT FROM WHERE choose true false which systems lecturer fall exam date database Copenhagen consider tree COUNT JOIN Italian evaluate LIKE GROUP answer seafood find complete-solutions step-by-step-answers model-answers correct-responses marking-scheme grading-rubric">
+                        <div class="file-name">Exam Fall 2024 Solutions</div>
+                        <div class="file-path">./pre-exam/Exam_F24_solutions.pdf</div>
+                        <div class="keywords">
+                            <span class="keyword">F24 Solutions</span>
+                            <span class="keyword">Complete Answers</span>
+                            <span class="keyword">Answer Key</span>
+                            <span class="keyword">Worked Solutions</span>
+                            <span class="keyword">Detailed Explanations</span>
+                            <span class="keyword">Model Answers</span>
+                            <span class="keyword">Step-by-Step</span>
+                            <span class="keyword">All Topics</span>
+                            <span class="keyword">Correct Responses</span>
+                            <span class="keyword">Past Exam Answers</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="no-results hidden" id="noResults">
+                <p>🔍 No files found matching your search.</p>
+                <p>Try different keywords like: SQL, ER, Transaction, Query, Index, ACID, etc.</p>
+            </div>
+        </div>
+    </div>
+    
+    <script>
+        // Search functionality
+        const searchInput = document.getElementById('searchInput');
+        const fileCards = document.querySelectorAll('.file-card');
+        const categories = document.querySelectorAll('.category');
+        const noResults = document.getElementById('noResults');
+        
+        searchInput.addEventListener('input', function() {
+            const searchTerm = this.value.toLowerCase().trim();
+            let visibleCount = 0;
+            
+            if (searchTerm === '') {
+                // Show all files and categories
+                fileCards.forEach(card => {
+                    card.classList.remove('hidden');
+                });
+                categories.forEach(cat => {
+                    cat.classList.remove('hidden');
+                    const grid = cat.querySelector('.files-grid');
+                    if (grid) {
+                        grid.classList.remove('collapsed');
+                    }
+                });
+                noResults.classList.add('hidden');
+                return;
+            }
+            
+            fileCards.forEach(card => {
+                const fileName = card.querySelector('.file-name').textContent.toLowerCase();
+                const keywords = card.getAttribute('data-keywords') ? card.getAttribute('data-keywords').toLowerCase() : '';
+                const filePath = card.querySelector('.file-path').textContent.toLowerCase();
+                
+                if (fileName.includes(searchTerm) || keywords.includes(searchTerm) || filePath.includes(searchTerm)) {
+                    card.classList.remove('hidden');
+                    visibleCount++;
+                } else {
+                    card.classList.add('hidden');
+                }
+            });
+            
+            // Show/hide categories based on visible files
+            categories.forEach(cat => {
+                const grid = cat.querySelector('.files-grid');
+                const visibleCards = grid.querySelectorAll('.file-card:not(.hidden)');
+                
+                if (visibleCards.length === 0) {
+                    cat.classList.add('hidden');
+                } else {
+                    cat.classList.remove('hidden');
+                    grid.classList.remove('collapsed');
+                }
+            });
+            
+            // Show no results message if nothing found
+            if (visibleCount === 0) {
+                noResults.classList.remove('hidden');
+            } else {
+                noResults.classList.add('hidden');
+            }
+        });
+        
+        // Category toggle functionality
+        function toggleCategory(categoryName) {
+            const grid = document.getElementById(categoryName + '-grid');
+            const toggle = document.getElementById('toggle-' + categoryName);
+            
+            if (grid.classList.contains('collapsed')) {
+                grid.classList.remove('collapsed');
+                toggle.textContent = '▼';
+            } else {
+                grid.classList.add('collapsed');
+                toggle.textContent = '▶';
+            }
+        }
+        
+        // File card click to open file in new tab
+        fileCards.forEach(card => {
+            card.addEventListener('click', function() {
+                const path = this.querySelector('.file-path').textContent;
+                // Open the file in a new tab using relative path
+                window.open(path, '_blank');
+            });
+        });
+    </script>
+</body>
+</html>
