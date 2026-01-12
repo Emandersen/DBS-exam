@@ -21,3 +21,7 @@
 \contentsline {subsection}{\numberline {8.1}\color {subsectioncolor}How to Calculate the Selections}{10}{subsection.8.1}%
 \contentsline {subsection}{\numberline {8.2}\color {subsectioncolor}Verifying Multiple Options}{11}{subsection.8.2}%
 \contentsline {subsection}{\numberline {8.3}\color {subsectioncolor}Summary Table}{11}{subsection.8.3}%
+\contentsline {section}{\numberline {9}\color {sectioncolor}B+ Tree Operations}{12}{section.9}%
+\contentsline {subsection}{\numberline {9.1}\color {subsectioncolor}Insertion (Handling Overflow)}{12}{subsection.9.1}%
+\contentsline {subsection}{\numberline {9.2}\color {subsectioncolor}Deletion (Handling Underflow)}{12}{subsection.9.2}%
+\contentsline {subsection}{\numberline {9.3}\color {subsectioncolor}Key Concepts for B+ Trees}{13}{subsection.9.3}%

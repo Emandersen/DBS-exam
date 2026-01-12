@@ -347,6 +347,95 @@ Range ($A > v$) & $n_r \times \frac{\max - v}{\max - \min}$ \\ \bottomrule
 \end{tabular}
 \end{center}
 
+\newpage
+\section{\color{sectioncolor}B+ Tree Operations}
+
+\subsection{\color{subsectioncolor}Insertion (Handling Overflow)}
+
+\begin{tcolorbox}[colback=importantbox,colframe=red,title=\textbf{What is Overflow?}]
+When you insert a key into a leaf node that is already full (contains $d-1$ keys), an overflow occurs.
+\end{tcolorbox}
+
+\begin{tcolorbox}[colback=examplebox,colframe=blue,title=\textbf{How to Handle Insertion Overflow}]
+\textbf{Step 1: Temporary Sort}
+\begin{itemize}
+    \item Place the new key in the node in its correct sorted order
+\end{itemize}
+
+\textbf{Step 2: Split}
+\begin{itemize}
+    \item Split the node into two parts
+\end{itemize}
+
+\textbf{Step 3: Promote}
+\begin{itemize}
+    \item \textbf{If it is a Leaf Node:} Keep the first $\lceil d/2 \rceil$ keys in the original node and move the remaining keys to a new sibling. Copy the smallest key of the new sibling up to the parent.
+    \item \textbf{If it is an Internal Node:} Move the middle key up to the parent and split the remaining keys between the old and new nodes.
+\end{itemize}
+
+\textbf{Step 4: Repeat}
+\begin{itemize}
+    \item If the parent also overflows, repeat the split process upward to the root.
+\end{itemize}
+\end{tcolorbox}
+
+\subsection{\color{subsectioncolor}Deletion (Handling Underflow)}
+
+\begin{tcolorbox}[colback=importantbox,colframe=red,title=\textbf{What is Underflow?}]
+A node underflows if its number of keys drops below the required minimum:
+\begin{itemize}
+    \item \textbf{Leaf Minimum:} $\lceil (d-1)/2 \rceil$ keys
+    \item \textbf{Internal Minimum:} $\lceil d/2 \rceil$ pointers
+\end{itemize}
+\end{tcolorbox}
+
+\begin{tcolorbox}[colback=examplebox,colframe=blue,title=\textbf{How to Handle Deletion Underflow}]
+\textbf{Step 1: Delete}
+\begin{itemize}
+    \item Find and remove the key from the leaf node
+\end{itemize}
+
+\textbf{Step 2: Check for Underflow}
+\begin{itemize}
+    \item If the node still has enough keys, you are done
+    \item If not, proceed to Step 3
+\end{itemize}
+
+\textbf{Step 3: Redistribution (Borrowing)}
+\begin{itemize}
+    \item Check if the immediate left or right sibling has "extra" keys (more than the minimum)
+    \item If yes, "borrow" a key from the sibling and update the parent's separator key to reflect the change
+\end{itemize}
+
+\textbf{Step 4: Merging (Coalescing)}
+\begin{itemize}
+    \item If no sibling can spare a key, merge the underfull node with a sibling
+    \item This requires removing a separator key from the parent
+    \item \textbf{Crucial:} If removing the key from the parent causes the parent to underflow, repeat the redistribution/merging process at the next level up
+\end{itemize}
+\end{tcolorbox}
+
+\subsection{\color{subsectioncolor}Key Concepts for B+ Trees}
+
+\begin{tcolorbox}[colback=formulabox,colframe=orange,title=\textbf{Important B+ Tree Facts}]
+\textbf{Search Path:}
+\begin{itemize}
+    \item Start at the root. If searching for $K$, follow the left pointer for values $< K$ and the right pointer for values $\ge K$
+\end{itemize}
+
+\textbf{Leaf Nodes:}
+\begin{itemize}
+    \item These are the only nodes that contain actual pointers to the data rows
+    \item Internal nodes only contain "signpost" keys
+\end{itemize}
+
+\textbf{Efficiency:}
+\begin{itemize}
+    \item Range queries are efficient because leaf nodes are linked together
+    \item You can find the start of a range and simply scan forward
+\end{itemize}
+\end{tcolorbox}
+
 \end{document}
 
 
